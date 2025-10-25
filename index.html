@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inscrição no Próximo Curso</title>
   <style>
+    /* ======== ESTILOS GERAIS ======== */
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
-      background-size: 400% 400%;
-      animation: fundoAnimado 10s ease infinite;
+      background: linear-gradient(135deg, #e0f7fa, #f0f9ff);
+      background-size: cover;
       padding: 40px;
       min-height: 100vh;
       display: flex;
@@ -18,24 +18,19 @@
       color: #333;
     }
 
-    @keyframes fundoAnimado {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
     h1 {
       text-align: center;
-      color: white;
+      color: #004080;
       margin-bottom: 20px;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
     }
 
+    /* ======== FORMULÁRIO ======== */
     form {
-      background: rgba(255, 255, 255, 0.95);
+      background: white;
       padding: 25px;
       border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
       width: 100%;
       max-width: 500px;
       transition: transform 0.3s ease;
@@ -64,13 +59,13 @@
     }
 
     input:focus, textarea:focus {
-      border-color: #2575fc;
-      box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+      border-color: #0077cc;
+      box-shadow: 0 0 5px rgba(0, 119, 204, 0.5);
       outline: none;
     }
 
     button {
-      background: linear-gradient(45deg, #00c6ff, #0072ff);
+      background: linear-gradient(45deg, #00aaff, #0077cc);
       color: white;
       border: none;
       font-weight: bold;
@@ -80,9 +75,9 @@
     }
 
     button:hover {
-      background: linear-gradient(45deg, #0072ff, #00c6ff);
+      background: linear-gradient(45deg, #0077cc, #00aaff);
       transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0, 114, 255, 0.4);
+      box-shadow: 0 4px 10px rgba(0, 119, 204, 0.4);
     }
 
     .mensagem {
@@ -95,6 +90,23 @@
     }
     .sucesso {
       color: #28a745;
+    }
+
+    .contador {
+      margin-top: 10px;
+      text-align: center;
+      color: #555;
+      font-size: 0.95em;
+    }
+
+    .botao-limpar {
+      background: #ff6666;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .botao-limpar:hover {
+      background: #cc0000;
     }
   </style>
 </head>
@@ -114,48 +126,72 @@
       <textarea id="mensagem" rows="4" placeholder="Escreva uma mensagem"></textarea>
 
       <button type="button" onclick="enviarFormulario()">Enviar</button>
+      <button type="button" class="botao-limpar" onclick="limparDados()">Limpar dados guardados</button>
     </form>
 
     <div id="mensagemResultado" class="mensagem"></div>
+    <div id="contadorMensagens" class="contador"></div>
   </div>
 
   <script>
-    // Quando a página é carregada, verificar se há dados no Local Storage
+    // Quando a página é carregada
     window.onload = function() {
       const nomeGuardado = localStorage.getItem("nome");
+      const contador = localStorage.getItem("contador") || 0;
+      const resultado = document.getElementById("mensagemResultado");
+      const contadorDiv = document.getElementById("contadorMensagens");
+
+      // Mostrar saudação se já existe nome guardado
       if (nomeGuardado) {
-        const resultado = document.getElementById("mensagemResultado");
         resultado.textContent = `👋 Bem-vindo de volta, ${nomeGuardado}!`;
         resultado.className = "mensagem sucesso";
       }
+
+      // Mostrar número de mensagens enviadas
+      contadorDiv.textContent = `Mensagens enviadas: ${contador}`;
     };
 
+    // Função de envio do formulário
     function enviarFormulario() {
       const nome = document.getElementById("nome").value.trim();
       const email = document.getElementById("email").value.trim();
       const mensagem = document.getElementById("mensagem").value.trim();
       const resultado = document.getElementById("mensagemResultado");
+      const contadorDiv = document.getElementById("contadorMensagens");
 
       resultado.textContent = "";
       resultado.className = "mensagem";
 
-      // Validação
       if (nome === "" || email === "" || mensagem === "") {
         resultado.textContent = "⚠️ Por favor, preencha todos os campos.";
         resultado.classList.add("erro");
         return;
       }
 
-      // Guardar no Local Storage
+      // Guarda nome, email e incrementa contador
       localStorage.setItem("nome", nome);
       localStorage.setItem("email", email);
+
+      let contador = parseInt(localStorage.getItem("contador")) || 0;
+      contador++;
+      localStorage.setItem("contador", contador);
 
       // Mensagem de sucesso
       resultado.textContent = `✅ Obrigado, ${nome}! A tua mensagem foi registada.`;
       resultado.classList.add("sucesso");
 
-      // Limpar campos
+      // Atualiza contador no ecrã
+      contadorDiv.textContent = `Mensagens enviadas: ${contador}`;
+
+      // Limpa o formulário
       document.getElementById("formInscricao").reset();
+    }
+
+    // Função para limpar dados guardados
+    function limparDados() {
+      localStorage.clear();
+      document.getElementById("mensagemResultado").textContent = "🧹 Dados guardados foram apagados.";
+      document.getElementById("contadorMensagens").textContent = "Mensagens enviadas: 0";
     }
   </script>
 
