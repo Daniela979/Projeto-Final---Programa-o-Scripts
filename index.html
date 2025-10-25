@@ -98,16 +98,6 @@
       color: #555;
       font-size: 0.95em;
     }
-
-    .botao-limpar {
-      background: #ff6666;
-      color: white;
-      margin-top: 10px;
-    }
-
-    .botao-limpar:hover {
-      background: #cc0000;
-    }
   </style>
 </head>
 <body>
@@ -126,7 +116,6 @@
       <textarea id="mensagem" rows="4" placeholder="Escreva uma mensagem"></textarea>
 
       <button type="button" onclick="enviarFormulario()">Enviar</button>
-      <button type="button" class="botao-limpar" onclick="limparDados()">Limpar dados guardados</button>
     </form>
 
     <div id="mensagemResultado" class="mensagem"></div>
@@ -134,24 +123,22 @@
   </div>
 
   <script>
-    // Quando a página é carregada
+    // Ao carregar a página, mostra saudação e contador se existirem dados
     window.onload = function() {
       const nomeGuardado = localStorage.getItem("nome");
       const contador = localStorage.getItem("contador") || 0;
       const resultado = document.getElementById("mensagemResultado");
       const contadorDiv = document.getElementById("contadorMensagens");
 
-      // Mostrar saudação se já existe nome guardado
       if (nomeGuardado) {
         resultado.textContent = `👋 Bem-vindo de volta, ${nomeGuardado}!`;
         resultado.className = "mensagem sucesso";
       }
 
-      // Mostrar número de mensagens enviadas
       contadorDiv.textContent = `Mensagens enviadas: ${contador}`;
     };
 
-    // Função de envio do formulário
+    // Função para validar e enviar o formulário
     function enviarFormulario() {
       const nome = document.getElementById("nome").value.trim();
       const email = document.getElementById("email").value.trim();
@@ -168,7 +155,7 @@
         return;
       }
 
-      // Guarda nome, email e incrementa contador
+      // Guardar nome, e-mail e contador no Local Storage
       localStorage.setItem("nome", nome);
       localStorage.setItem("email", email);
 
@@ -176,22 +163,13 @@
       contador++;
       localStorage.setItem("contador", contador);
 
-      // Mensagem de sucesso
       resultado.textContent = `✅ Obrigado, ${nome}! A tua mensagem foi registada.`;
       resultado.classList.add("sucesso");
 
-      // Atualiza contador no ecrã
       contadorDiv.textContent = `Mensagens enviadas: ${contador}`;
 
-      // Limpa o formulário
+      // Limpar formulário
       document.getElementById("formInscricao").reset();
-    }
-
-    // Função para limpar dados guardados
-    function limparDados() {
-      localStorage.clear();
-      document.getElementById("mensagemResultado").textContent = "🧹 Dados guardados foram apagados.";
-      document.getElementById("contadorMensagens").textContent = "Mensagens enviadas: 0";
     }
   </script>
 
